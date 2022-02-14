@@ -16,6 +16,8 @@ class LoadingButton @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     private var widthSize = 0
     private var heightSize = 0
+    private var clipW = 0
+    private var clipH = 0
     private var progress = 0f
 
     //Base button attributes________________________
@@ -45,6 +47,8 @@ class LoadingButton @JvmOverloads constructor(
         color = loadingArcColor
     }
     //Button text attributes________________________
+    private val downloadString = resources.getString(R.string.button_name)
+    private val loadingString = resources.getString(R.string.button_loading)
     private val textColor = ResourcesCompat.getColor(resources, R.color.white, context.theme)
     private val btnTextSize = 75.0f
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -116,19 +120,19 @@ class LoadingButton @JvmOverloads constructor(
     // Loading arc fun
     private fun drawLoadingArc(canvas: Canvas?) {
         canvas?.getClipBounds(baseButton)
-        val clipH = baseButton.height()
-        val clipW = baseButton.width()
+        clipH = baseButton.height()
+        clipW = baseButton.width()
         textPaint.getTextBounds(
-            resources.getString(R.string.button_loading),
+            loadingString,
             0,
-            resources.getString(R.string.button_loading).length,
+            loadingString.length,
             baseButton
         )
 
         loadingArc.set(
-            (clipW /2f + baseButton.width() /2f) - baseButton.height() /1.5f,
+            (clipW /2f + baseButton.width() /1.5f) - baseButton.height() /1.5f,
             (clipH /2f) - baseButton.height() /1.5f,
-            (clipW /2f + baseButton.width() /2f) + baseButton.height() /1.5f,
+            (clipW /2f + baseButton.width() /1.5f) + baseButton.height() /1.5f,
             (clipH /2f) + baseButton.height() /1.5f
         )
         canvas?.drawArc(
@@ -143,9 +147,9 @@ class LoadingButton @JvmOverloads constructor(
     // Text fun
     private fun drawTextOnButton(canvas: Canvas?) {
         val string = if (buttonState == ButtonState.Loading) {
-            resources.getString(R.string.button_loading)
+            loadingString
         } else {
-            resources.getString(R.string.button_name)
+            downloadString
         }
 
         canvas?.drawText(
@@ -156,6 +160,14 @@ class LoadingButton @JvmOverloads constructor(
                         + textPaint.ascent()) / 2)),
             textPaint
         )
+    }
+
+    // Changes state of the Loading button
+    fun buttonStateManager(state: ButtonState) {
+        if (buttonState != state) {
+            buttonState = state
+            invalidate()
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
