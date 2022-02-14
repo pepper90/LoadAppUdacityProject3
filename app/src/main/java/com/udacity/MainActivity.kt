@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import com.udacity.databinding.ActivityMainBinding
 import com.udacity.utils.sendNotification
 
@@ -73,6 +74,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun download(url: String) {
+        loadingButton.buttonStateManager(ButtonState.Loading)
+        disableRadioButtons()
+
         val request =
             DownloadManager.Request(Uri.parse(url))
                 .setTitle(getString(R.string.app_name))
@@ -80,8 +84,6 @@ class MainActivity : AppCompatActivity() {
                 .setRequiresCharging(false)
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(true)
-
-        loadingButton.buttonStateManager(ButtonState.Loading)
 
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
@@ -127,6 +129,14 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.error),
                     Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    //Disable Radio buttons while State.Loading
+    private fun disableRadioButtons() {
+        val radioGroup = binding.includedMainContent.radioGroup
+        radioGroup.children.forEach {
+            it.isEnabled = false
         }
     }
 

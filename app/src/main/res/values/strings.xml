@@ -26,7 +26,7 @@
     <string name="notification_channel_id">channel_one</string>
     <string name="notification_title">Udacity: Android Kotlin Nanodegree</string>
     <string name="notification_description">%s repository is downloaded</string>
-    <string name="notification_button">See changes</string>
+    <string name="notification_button">Check the status</string>
 
 
 </resources>
