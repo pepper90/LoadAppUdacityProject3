@@ -27,6 +27,9 @@
     <string name="notification_title">Udacity: Android Kotlin Nanodegree</string>
     <string name="notification_description">%s repository is downloaded</string>
     <string name="notification_button">Check the status</string>
+    <string name="status_success">Success</string>
+    <string name="status_failure">Failure</string>
+
 
 
 </resources>

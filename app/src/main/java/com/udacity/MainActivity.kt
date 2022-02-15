@@ -3,11 +3,11 @@ package com.udacity
 import android.app.DownloadManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.database.Cursor
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -15,7 +15,6 @@ import android.os.Bundle
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import com.udacity.databinding.ActivityMainBinding
@@ -29,8 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var loadingButton: LoadingButton
     private lateinit var notificationManager: NotificationManager
-    private lateinit var pendingIntent: PendingIntent
-    private lateinit var action: NotificationCompat.Action
+    private lateinit var downloadManager: DownloadManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,35 +45,79 @@ class MainActivity : AppCompatActivity() {
             NotificationManager::class.java
         ) as NotificationManager
 
+        //Initialize Download manager
+        downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+
         //Initialize Notification channel
         createChannel(getString(R.string.notification_channel_id), getString(R.string.app_name))
-
-//        notificationManager.sendNotification(
-//            application
-//                .getString(
-//                    R.string.notification_description,
-//                    getRadioButtonString()
-//                ),
-//            application)
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         binding.includedMainContent.customButton.setOnClickListener {
-            radioButtonSelector()
+            radioButtonSelector() // Picks the correct URL to download from based on selected Radio button
         }
     }
 
-
-
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            var cursor: Cursor? = null
+            var status: Int? = null
+            val statusMessage: String?
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+
+            if (id == downloadID) {
+                val query = DownloadManager.Query().setFilterById(id) //filters DownloadManager queries
+
+                try {
+                    cursor = downloadManager.query(query)
+
+                    if (cursor.moveToFirst()) {
+                        status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
+                    }
+                } finally {
+                    cursor?.close()
+                }
+            }
+
+            when (status) {
+                // sends success Notification & re-enables Radio Buttons for next download
+                DownloadManager.STATUS_SUCCESSFUL -> {
+                    statusMessage = getString(R.string.status_success)
+                    loadingButton.buttonStateManager(ButtonState.Completed)
+
+                    notificationManager.sendNotification(
+                        application
+                            .getString(
+                                R.string.notification_description,
+                                getRadioButtonString()
+                            ),
+                        statusMessage,
+                        application)
+                    radioButtonsState(true)
+                }
+
+                // sends failure Notification & re-enables Radio Buttons for next download
+                DownloadManager.STATUS_FAILED -> {
+                    statusMessage = getString(R.string.status_failure)
+                    loadingButton.buttonStateManager(ButtonState.Completed)
+
+                    notificationManager.sendNotification(
+                        application
+                            .getString(
+                                R.string.notification_description,
+                                getRadioButtonString()
+                            ),
+                        statusMessage,
+                        application)
+                    radioButtonsState(true)
+                }
+            }
         }
     }
 
     private fun download(url: String) {
-        loadingButton.buttonStateManager(ButtonState.Loading)
-        disableRadioButtons()
+        loadingButton.buttonStateManager(ButtonState.Loading) //Triggers the animations
+        radioButtonsState(false) // Disables the radio buttons
 
         val request =
             DownloadManager.Request(Uri.parse(url))
@@ -87,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
-            downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+            downloadManager.enqueue(request) // enqueue puts the download request in the queue.
     }
 
     // Create notification channel
@@ -132,11 +174,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //Disable Radio buttons while State.Loading
-    private fun disableRadioButtons() {
+    //Enable / Disable Radio buttons while State.Loading
+    private fun radioButtonsState(status: Boolean) {
         val radioGroup = binding.includedMainContent.radioGroup
         radioGroup.children.forEach {
-            it.isEnabled = false
+            it.isEnabled = status
         }
     }
 
@@ -155,7 +197,6 @@ class MainActivity : AppCompatActivity() {
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
         private const val RETROFIT_URL =
             "https://github.com/square/retrofit/archive/refs/heads/master.zip"
-        private const val CHANNEL_ID = "channelId"
     }
 
 }
