@@ -73,7 +73,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_height="60dp"
             android:layout_margin="20dp"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:baseButtonColor="@color/colorPrimary"
+            app:loadingLayerColor="@color/colorPrimaryDark"
+            app:loadingArcColor="@color/colorAccent"
+            app:textColorColor="@color/white"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

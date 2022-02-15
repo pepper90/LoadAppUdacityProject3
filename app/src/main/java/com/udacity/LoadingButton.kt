@@ -9,6 +9,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
@@ -19,11 +20,24 @@ class LoadingButton @JvmOverloads constructor(
     private var clipW = 0
     private var clipH = 0
     private var progress = 0f
+    private var baseButtonColor = 0
+    private var loadingLayerColor = 0
+    private var loadingArcColor = 0
+    private var textColor = 0
+
+    init {
+        context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
+            baseButtonColor = getColor(R.styleable.LoadingButton_baseButtonColor, baseButtonColor)
+            loadingLayerColor = getColor(R.styleable.LoadingButton_loadingLayerColor, loadingLayerColor)
+            loadingArcColor = getColor(R.styleable.LoadingButton_loadingArcColor, loadingArcColor)
+            textColor = getColor(R.styleable.LoadingButton_textColorColor, textColor)
+        }
+    }
 
     //Base button attributes________________________
     private val baseButton = Rect()
-    private val baseButtonColor =
-        ResourcesCompat.getColor(resources, R.color.colorPrimary, context.theme)
+//    private val baseButtonColor =
+//        ResourcesCompat.getColor(resources, R.color.colorPrimary, context.theme)
     private val baseButtonPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         color = baseButtonColor
@@ -31,8 +45,8 @@ class LoadingButton @JvmOverloads constructor(
 
     //Loading layer attributes______________________
     private val loadingLayer = Rect()
-    private val loadingLayerColor =
-        ResourcesCompat.getColor(resources, R.color.colorPrimaryDark, context.theme)
+//    private val loadingLayerColor =
+//        ResourcesCompat.getColor(resources, R.color.colorPrimaryDark, context.theme)
     private val loadingLayerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         color = loadingLayerColor
@@ -40,8 +54,8 @@ class LoadingButton @JvmOverloads constructor(
 
     //Loading arch attributes_______________________
     private val loadingArc = RectF()
-    private val loadingArcColor =
-        ResourcesCompat.getColor(resources, R.color.colorAccent, context.theme)
+//    private val loadingArcColor =
+//        ResourcesCompat.getColor(resources, R.color.colorAccent, context.theme)
     private val loadingArcPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         color = loadingArcColor
@@ -49,7 +63,7 @@ class LoadingButton @JvmOverloads constructor(
     //Button text attributes________________________
     private val downloadString = resources.getString(R.string.button_name)
     private val loadingString = resources.getString(R.string.button_loading)
-    private val textColor = ResourcesCompat.getColor(resources, R.color.white, context.theme)
+//    private val textColor = ResourcesCompat.getColor(resources, R.color.white, context.theme)
     private val btnTextSize = 75.0f
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = textColor
