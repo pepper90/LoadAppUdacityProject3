@@ -10,15 +10,15 @@ import com.udacity.DetailActivity
 import com.udacity.R
 
 private const val NOTIFICATION_ID = 0
-const val FILE_NAME = " FILE_NAME"
+const val FILE_NAME = "FILE_NAME"
 const val STATUS = "STATUS"
 
 @SuppressLint("UnspecifiedImmutableFlag")
 fun NotificationManager.sendNotification(fileName: String, status: String, applicationContext: Context) {
 
     val contentIntent = Intent(applicationContext, DetailActivity::class.java)
-        .putExtra(FILE_NAME, fileName)
-        .putExtra(STATUS, status)
+    contentIntent.putExtra(FILE_NAME, fileName)
+    contentIntent.putExtra(STATUS, status)
 
     val contentPendingIntent = getActivity(
         applicationContext,
@@ -49,6 +49,6 @@ fun NotificationManager.sendNotification(fileName: String, status: String, appli
     notify(NOTIFICATION_ID, builder.build())
 }
 
-//fun NotificationManager.cancelNotifications() {
-//    cancelAll()
-//}
+fun NotificationManager.cancelNotifications() {
+    cancelAll()
+}

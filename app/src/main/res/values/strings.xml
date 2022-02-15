@@ -5,7 +5,6 @@
 
     <!--Content descriptions-->
     <string name="app_logo">LoadApp logo</string>
-    <string name="fab">Floating Action Button</string>
 
     <!--Main activity strings-->
     <string name="option_one">Glide - Image Loading Library by BumpTech</string>
@@ -21,6 +20,7 @@
     <string name="file_name_title">File name:</string>
     <string name="file_name_description">%s</string>
     <string name="status_description">%s</string>
+    <string name="ok_button">OK</string>
 
     <!--Notification strings-->
     <string name="notification_channel_id">channel_one</string>

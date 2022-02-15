@@ -36,19 +36,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        //Initialize Loading button
+        // Initialize Loading button
         loadingButton = binding.includedMainContent.customButton
 
-        //Initialize Notification Manager
+        // Initialize Notification Manager
         notificationManager = ContextCompat.getSystemService(
             application,
             NotificationManager::class.java
         ) as NotificationManager
 
-        //Initialize Download manager
+        // Initialize Download manager
         downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
 
-        //Initialize Notification channel
+        // Initialize Notification channel
         createChannel(getString(R.string.notification_channel_id), getString(R.string.app_name))
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
@@ -174,7 +174,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //Enable / Disable Radio buttons while State.Loading
+    // Enable / Disable Radio buttons while State.Loading
     private fun radioButtonsState(status: Boolean) {
         val radioGroup = binding.includedMainContent.radioGroup
         radioGroup.children.forEach {
