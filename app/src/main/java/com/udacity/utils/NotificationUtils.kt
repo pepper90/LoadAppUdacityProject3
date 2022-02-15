@@ -17,8 +17,8 @@ const val STATUS = "STATUS"
 fun NotificationManager.sendNotification(fileName: String, status: String, applicationContext: Context) {
 
     val contentIntent = Intent(applicationContext, DetailActivity::class.java)
-    contentIntent.putExtra(FILE_NAME, fileName)
-    contentIntent.putExtra(STATUS, status)
+        .putExtra(FILE_NAME, fileName)
+        .putExtra(STATUS, status)
 
     val contentPendingIntent = getActivity(
         applicationContext,

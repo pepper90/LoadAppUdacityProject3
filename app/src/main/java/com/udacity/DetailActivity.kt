@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import com.udacity.databinding.ActivityDetailBinding
 import com.udacity.utils.FILE_NAME
 import com.udacity.utils.STATUS
+import com.udacity.utils.cancelNotifications
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
@@ -26,7 +27,7 @@ class DetailActivity : AppCompatActivity() {
             NotificationManager::class.java
         ) as NotificationManager
 
-        notificationManager.cancelAll() //Cancel all current notifications
+        notificationManager.cancelNotifications() //Cancel all current notifications
 
         val targetFile = intent.getStringExtra(FILE_NAME)
         val targetFileStatus = intent.getStringExtra(STATUS)
@@ -42,6 +43,7 @@ class DetailActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         binding.includedDetailContent.okButton.setOnClickListener {
             startActivity(intent)
+            finish()
         }
     }
 
